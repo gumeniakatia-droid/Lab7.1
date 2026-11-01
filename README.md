@@ -2,26 +2,6 @@
 
 Модернізація статичної бібліотеки для розв’язання нелінійних рівнянь із повною підтримкою механізму винятків, гарантій безпеки та модульного тестування.
 
-## Структура проєкту
-
-```
-RootFindingLab/
-├── CMakeLists.txt
-├── vcpkg.json
-├── README.md
-├── include/
-│   ├── RootExceptions.h      # ієрархія винятків
-│   ├── RootFindingTask.h     # основний клас
-│   └── ScopeLogger.h         # RAII-логер
-├── src/
-│   └── RootFindingTask.cpp
-├── demo/
-│   └── main.cpp              # демонстрація
-├── antipattern/
-│   └── main.cpp              # антипатерни
-└── tests/
-    └── RootFindingTests.cpp  # Google Test
-```
 
 ## Інваріанти класу `RootFindingTask`
 
@@ -34,17 +14,7 @@ RootFindingLab/
 
 Некоректний стан ніколи не доступний через публічний інтерфейс: усі перевірки виконуються до зміни членів класу.
 
-## Ієрархія винятків
 
-```
-std::runtime_error
- └── RootException
-      ├── InvalidIntervalException   (parameter, value)
-      ├── NoSignChangeException
-      ├── ZeroDerivativeException    (x)
-      ├── ZeroDenominatorException
-      └── NoConvergenceException     (max_iterations)
-```
 
 Додатково використовуються стандартні типи:
 
@@ -92,16 +62,8 @@ Program continues normally.
 
 Фактичний результат після запуску `RootFindingDemo` повинен збігатися з очікуваним (порядок знищення локальних об’єктів – зворотний до порядку створення).
 
-## Антипатерни
 
-Файл `antipattern/main.cpp` демонструє:
-
-- `throw 42` і `throw std::string(...)` **не** перехоплюються `catch (const std::exception&)`;
-- `throw ex;` (замість `throw;`) призводить до object slicing.
-
-**Висновок:** для бібліотек C++ слід використовувати ієрархію, похідну від `std::exception` (або `std::runtime_error`), щоб забезпечити єдиний інтерфейс `what()` і централізовану обробку.
-
-## Збирання (Visual Studio + vcpkg)
+## Збирання 
 
 1. Відкрити папку як CMake-проєкт.
 2. У терміналі проєкту:
